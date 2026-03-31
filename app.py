@@ -23,7 +23,8 @@ def embed_images_as_base64(markdown_text, images_dir):
                 ext = filename.split(".")[-1].lower()
                 mime_type = "image/png" if ext == "png" else "image/jpeg"
                 return f"![{alt_text}](data:{mime_type};base64,{encoded_string})"
-        return match.group(0) # Keep original if file not found
+        # If file not found, explicitly show "Image Not Available" text instead of a broken generic markdown icon
+        return f"**[⚠️ Image Not Available: {alt_text}]**"
         
     pattern = r"\!\[([^\]]*)\]\((images/[^\)]+)\)"
     return re.sub(pattern, replacer, markdown_text)
