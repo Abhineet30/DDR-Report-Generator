@@ -25,11 +25,19 @@ def extract_content_from_pdf(pdf_path, prefix, output_dir="output/images"):
         # Extract images from the page
         image_list = page.get_images(full=True)
         for img_index, img in enumerate(image_list):
+            # Safe limit: stop if we've pulled 15 images from this document
+            if len(extracted_images) >= 15:
+                break
+                
             xref = img[0]
             base_image = doc.extract_image(xref)
             image_bytes = base_image["image"]
             image_ext = base_image["ext"]
             
+            # Skip tiny images (usually logos, headers, vectors)
+            if len(image_bytes) < 15000:
+                continue
+                
             # Generate a unique filename for the reference
             image_filename = f"{prefix}_page{page_num+1}_img{img_index+1}.{image_ext}"
             image_path = os.path.join(output_dir, image_filename)
@@ -39,6 +47,9 @@ def extract_content_from_pdf(pdf_path, prefix, output_dir="output/images"):
                 f.write(image_bytes)
             
             extracted_images.append(image_path)
+            
+        if len(extracted_images) >= 15:
+            break
     
     doc.close()
     
