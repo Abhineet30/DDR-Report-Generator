@@ -1,6 +1,6 @@
 # AI Detailed Diagnostic Report (DDR) Generator
 
-🌟 **[Live Demo: Click Here to Test the Web App!](https://ddr-report-generator-yhtaqjg2jf7y458bndolo6.streamlit.app/)** 🌟
+🌟 **[Live Demo: Click Here to Test the Web App!](YOUR_DEPLOYMENT_LINK_HERE)** 🌟
 
 This project is an AI-powered logic workflow with a clean Streamlit Web UI, designed to automatically generate a structured, client-ready Detailed Diagnostic Report (DDR) by fusing data from visual property inspection and thermal reports.
 
@@ -46,5 +46,16 @@ streamlit run app.py
 ### 6. View Results
 The server will open a web browser running at `http://localhost:8501`. Upload the sample PDFs from your `data/` folder and receive the automatically generated, structured final markdown DDR file directly into your UI!
 
-## Limitations
-- *Limitation:* The current extraction engine relies on standard layered PDFs having selectable text and correctly embedded images. Flattened image-only PDFs (like screenshots dropped in a word doc exported to PDF) might require an explicit OCR initial pass.
+## Limitations & Future Improvements
+As requested by the assignment criteria, here is a transparent look at the system's current limitations and how it can be scaled.
+
+### Current Limitations
+1. **Document Structure Dependency**: The extraction engine relies on standard, digitally-created PDFs having selectable text and correctly embedded image layers. Flattened image-only PDFs (like screenshots dropped in a word doc and exported to PDF) would break the separation engine since PyMuPDF treats the whole page as a single image.
+2. **Sequential Prompt Limit**: The pipeline currently passes the entire parsed text history into the Gemini context window. While Gemini 1.5/2.5 Flash has a million-token context, incredibly massive corporate reports (100+ pages) with hundreds of high-res images might eventually trigger token or payload-size limits during the API call.
+3. **Image Deduplication**: PyMuPDF sometimes extracts logos, headers, or repeated UI icons as separate images, which are blindly passed to the LLM, slightly polluting the multimodal prompt.
+
+### How I Would Improve It
+1. **Pytesseract OCR Fallback**: If `PyMuPDF` detects zero textual elements on a page but finds a massive image, the system should automatically route that page through `Tesseract OCR` to physically scrape the text back out, solving the flattened PDF constraint.
+2. **Vector Chunking (RAG Architecture)**: To scale this for massive 500-page enterprise datasets, I would redesign the core engine to not pass everything at once. Instead, I would chunk the observations, throw them into a local vector database (like ChromaDB), and ask the LLM to recursively build the DDR section-by-section using Retrieval-Augmented Generation (RAG).
+3. **Computer Vision Object Filtering**: I would add a lightweight pre-processing model (like YOLO or OpenCV) to the `extractor.py` pipeline to detect if an extracted image is a "logo/barcode" versus an "actual property photo", deleting the junk images before they ever reach Gemini.
+4. **Structured Schema Output**: Instead of returning just Markdown, I would instruct Gemini to return a structured JSON schema via `response_schema`. The backend would then automatically bind that structured data to a beautiful, printable PDF template using `WeasyPrint` or `ReportLab`.
