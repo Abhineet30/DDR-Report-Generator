@@ -43,9 +43,12 @@ def main():
     # Sidebar
     st.sidebar.header("Configuration")
     
-    # Load API Key from .env securely
+    # Load API Key securely (Works for both Local .env and Streamlit Cloud st.secrets)
     load_dotenv()
-    api_key = os.getenv("GEMINI_API_KEY", "")
+    try:
+        api_key = st.secrets.get("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY", ""))
+    except Exception:
+        api_key = os.getenv("GEMINI_API_KEY", "")
     
     st.sidebar.warning("Note: The model takes 15-30 seconds to run because it parses heavy image files and performs rigorous contextual reasoning.")
 
@@ -58,7 +61,7 @@ def main():
         
     if st.button("Generate Diagnostic Report (DDR)", type="primary"):
         if not api_key:
-            st.error("Please add your Gemini API Key to your completely hidden `.env` file first.")
+            st.error("Missing Gemini API Key! If running locally, add it to `.env`. If deployed on Streamlit Cloud, add it to **App Settings -> Secrets**.")
             return
             
         if inspection_file and thermal_file:
