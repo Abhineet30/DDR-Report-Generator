@@ -1,6 +1,6 @@
 # AI Detailed Diagnostic Report (DDR) Generator
 
-🌟 **[Live Demo: Click Here to Test the Web App!](YOUR_DEPLOYMENT_LINK_HERE)** 🌟
+🌟 **[Live Demo: Click Here to Test the Web App!](https://ddr-report-generator-fob4dnocwva4phvgdpcm6k.streamlit.app/)** 🌟
 
 This project is an AI-powered logic workflow with a clean Streamlit Web UI, designed to automatically generate a structured, client-ready Detailed Diagnostic Report (DDR) by fusing data from visual property inspection and thermal reports.
 
