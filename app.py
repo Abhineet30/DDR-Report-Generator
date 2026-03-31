@@ -42,13 +42,11 @@ def main():
     # Sidebar
     st.sidebar.header("Configuration")
     
-    # Priority: System Env -> Text Input
+    # Load API Key from .env securely
     load_dotenv()
-    env_api_key = os.getenv("GEMINI_API_KEY", "")
+    api_key = os.getenv("GEMINI_API_KEY", "")
+    
     st.sidebar.warning("Note: The model takes 15-30 seconds to run because it parses heavy image files and performs rigorous contextual reasoning.")
-    api_key = st.sidebar.text_input("Gemini API Key", value=env_api_key, type="password")
-    if api_key:
-        os.environ["GEMINI_API_KEY"] = api_key
 
     # Main UI
     col1, col2 = st.columns(2)
@@ -59,7 +57,7 @@ def main():
         
     if st.button("Generate Diagnostic Report (DDR)", type="primary"):
         if not api_key:
-            st.error("Please provide a Gemini API Key in the sidebar or your `.env` file first.")
+            st.error("Please add your Gemini API Key to your completely hidden `.env` file first.")
             return
             
         if inspection_file and thermal_file:
