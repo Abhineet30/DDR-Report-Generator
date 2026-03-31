@@ -1,6 +1,8 @@
 # AI Detailed Diagnostic Report (DDR) Generator
 
-This project is an AI-powered workflow designed to automatically generate a structured, client-ready Detailed Diagnostic Report (DDR) by fusing data from visual property inspection and thermal reports. 
+🌟 **[Live Demo: Click Here to Test the Web App!](YOUR_DEPLOYMENT_LINK_HERE)** 🌟
+
+This project is an AI-powered logic workflow with a clean Streamlit Web UI, designed to automatically generate a structured, client-ready Detailed Diagnostic Report (DDR) by fusing data from visual property inspection and thermal reports.
 
 ## How It Works 🧠
 1. **Multimodal Extraction:** The system uses `PyMuPDF` to parse both the inspection and thermal PDFs. It robustly extracts all embedded images and text separately.
@@ -36,14 +38,13 @@ Place your sample reports inside the `data/` folder:
 - `data/inspection_report.pdf`
 - `data/thermal_report.pdf`
 
-### 5. Run the Workflow!
+### 5. Run the Workflow locally!
 ```bash
-python main.py
+streamlit run app.py
 ```
 
 ### 6. View Results
-The output will be saved in the `output/` directory as `DDR_Final_Report.md`. All dynamically embedded images will be saved inside `output/images/`.
+The server will open a web browser running at `http://localhost:8501`. Upload the sample PDFs from your `data/` folder and receive the automatically generated, structured final markdown DDR file directly into your UI!
 
-## Author limitations and Improvements
-- *Limitation:* The current version relies on PDFs having selectable text and properly embedded images. Flattened image-only PDFs would require an OCR initial pass.
-- *Future Improvement:* Wrap the pipeline in a FastAPI backend and a Streamlit frontend so non-technical users can drag-and-drop their PDFs directly into a browser to get a generated report.
+## Limitations
+- *Limitation:* The current extraction engine relies on standard layered PDFs having selectable text and correctly embedded images. Flattened image-only PDFs (like screenshots dropped in a word doc exported to PDF) might require an explicit OCR initial pass.
